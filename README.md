@@ -1,22 +1,31 @@
 # json-view
-This is a javascript library for displaying json data into a DOM. [link to demo](http://pgrabovets.github.io/json-view/)
 
-### Installation
+This is a JavaScript library for displaying JSON data in the DOM.
+[Demo link](http://pgrabovets.github.io/json-view/)
+
+## Installation
+
 ```javascript
-  npm install '@pgrabovets/json-view';
+  npm install '@pgrabovets/json-view'
 ```
 
-### How to use
-include jsonview.js from dist directory in your html page
+## How to use
+
+Import the jsonview library from the npm package:
+
+```javascript
+import jsonview from "@pgrabovets/json-view";
+```
+
+Or include jsonview.umd.cjs and jsonview.css from the dist directory in your HTML page:
+
 ```html
- <script src="jsonview.js"></script>
-```
-or you can use import
-```javascript
-  import jsonview from '@pgrabovets/json-view';
+<link href="jsonview.css" rel="stylesheet" />
+<script src="jsonview.umd.cjs"></script>
 ```
 
-get json data and render tree into DOM
+Get JSON data and render the tree into the DOM:
+
 ```javascript
 // get json data
 const data = '{"name": "json-view","version": "1.0.0"}';
@@ -25,13 +34,14 @@ const data = '{"name": "json-view","version": "1.0.0"}';
 const tree = jsonview.create(data);
 
 // render tree into dom element
-jsonview.render(tree, document.querySelector('.tree'));
+jsonview.render(tree, document.querySelector(".tree"));
 
-// you can render json data without creating tree
-const tree = jsonview.renderJSON(data, document.querySelector('.tree'));
+// you can render JSON data without creating a tree manually
+const tree = jsonview.renderJSON(data, document.querySelector(".tree"));
 ```
 
-control methods
+Control methods:
+
 ```javascript
 // expand tree
 jsonview.expand(tree);
@@ -40,71 +50,77 @@ jsonview.expand(tree);
 jsonview.collapse(tree);
 
 // traverse tree object
-jsonview.traverse(tree, function(node) {
+jsonview.traverse(tree, function (node) {
   console.log(node);
 });
 
-// function toggles between show or hide
+// toggle between show and hide
 jsonview.toggleNode(tree);
 
-// destroy and unmount json tree from the dom
+// destroy and unmount JSON tree from the DOM
 jsonview.destroy(tree);
 ```
 
-### Example1
+## Example 1
+
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <title>JSON VIEW</title>
-</head>
-<body>
-  <div class="root"></div>
+  <head>
+    <link href="dist/jsonview.css" rel="stylesheet" />
+    <title>JSON VIEW</title>
+  </head>
+  <body>
+    <div class="root"></div>
 
-  <script type="text/javascript" src="jsonview.js"></script>
-  <script type="text/javascript">
-    fetch('example2.json')
-    .then((res)=> {
-      return res.text();
-    })
-    .then((data) => {
-      const tree = jsonview.create(data);
-      jsonview.render(tree, document.querySelector('.root'));
-      jsonview.expand(tree);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  </script>
-</body>
+    <script type="text/javascript" src="dist/jsonview.umd.cjs"></script>
+    <script type="text/javascript">
+      fetch("dist/example2.json")
+        .then((res) => {
+          return res.text();
+        })
+        .then((data) => {
+          const tree = jsonview.create(data);
+          jsonview.render(tree, document.querySelector("#root"));
+          jsonview.expand(tree);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    </script>
+  </body>
 </html>
-
 ```
 
-### Example2
+## Example 2
+
 ```javascript
-import jsonview from '@pgrabovets/json-view';
+import "@pgrabovets/json-view/style.css";
+import jsonview from "@pgrabovets/json-view";
 
-fetch('example2.json')
-.then((res)=> {
-  return res.text();
-})
-.then((data) => {
-  const tree = jsonview.create(data);
-  jsonview.render(tree, document.querySelector('.root'));
-  jsonview.expand(tree);
-})
-.catch((err) => {
-  console.log(err);
-})
+fetch("example2.json")
+  .then((res) => {
+    return res.text();
+  })
+  .then((data) => {
+    const tree = jsonview.create(data);
+    jsonview.render(tree, document.querySelector(".root"));
+    jsonview.expand(tree);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 ```
 
-### For development install dependencies and run scripts
+## Development
+
+### Clone the repository and install dependencies:
+
 ```
 $ npm install
 
-$ npm run serve
+$ npm run dev
 $ npm run build
 
-open http://localhost:3000/
+open http://localhost:5173/
 ```
