@@ -31,6 +31,7 @@
   color: #444;
   margin-right: 4px;
   margin-left: 4px;
+  min-width: 12px;
 }
 
 .json-container .json-index {
@@ -39,7 +40,7 @@
 }
 
 .json-container .json-value {
-  margin-left: 8px;
+  margin-left: 4px;
 }
 
 .json-container .json-number {
@@ -52,11 +53,6 @@
 
 .json-container .json-string {
   color: #86b25c;
-}
-
-.json-container .json-size {
-  margin-right: 4px;
-  margin-left: 4px;
 }
 
 .json-container .hidden {
