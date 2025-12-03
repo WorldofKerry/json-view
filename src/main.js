@@ -6,8 +6,8 @@ fetch("example2.json")
   })
   .then((data) => {
     const tree = jsonview.create(data);
-    jsonview.render(tree, document.getElementById("root"));
     jsonview.expand(tree);
+    jsonview.render(tree, document.getElementById("root"));
   })
   .catch((err) => {
     console.log(err);

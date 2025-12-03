@@ -9,13 +9,15 @@ const classes = {
   CARET_RIGHT: "fa-caret-right",
   CARET_DOWN: "fa-caret-down",
   ICON: "fas",
+  CONTAINER: "json-container",
 };
 
 function expandedTemplate(params = {}) {
-  const { key, size } = params;
+  const { key, size, isExpanded = false } = params;
+  const caretIconClass = isExpanded ? classes.CARET_DOWN : classes.CARET_RIGHT;
   return `
     <div class="line">
-      <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
+      <div class="caret-icon"><i class="fas ${caretIconClass}"></i></div>
       <div class="json-key">${key}</div>
       <div class="json-size">${size}</div>
     </div>
@@ -36,13 +38,13 @@ function notExpandedTemplate(params = {}) {
 
 function createContainerElement() {
   const el = element("div");
-  el.className = "json-container";
+  el.className = classes.CONTAINER;
   return el;
 }
 
 function hideNodeChildren(node) {
   node.children.forEach((child) => {
-    child.el.classList.add(classes.HIDDEN);
+    child.el && child.el.classList.add(classes.HIDDEN);
     if (child.isExpanded) {
       hideNodeChildren(child);
     }
@@ -51,7 +53,7 @@ function hideNodeChildren(node) {
 
 function showNodeChildren(node) {
   node.children.forEach((child) => {
-    child.el.classList.remove(classes.HIDDEN);
+    child.el && child.el.classList.remove(classes.HIDDEN);
     if (child.isExpanded) {
       showNodeChildren(child);
     }
@@ -59,7 +61,7 @@ function showNodeChildren(node) {
 }
 
 function setCaretIconDown(node) {
-  if (node.children.length > 0) {
+  if (node.children.length > 0 && node.el) {
     const icon = node.el.querySelector("." + classes.ICON);
     if (icon) {
       icon.classList.replace(classes.CARET_RIGHT, classes.CARET_DOWN);
@@ -68,7 +70,7 @@ function setCaretIconDown(node) {
 }
 
 function setCaretIconRight(node) {
-  if (node.children.length > 0) {
+  if (node.children.length > 0 && node.el) {
     const icon = node.el.querySelector("." + classes.ICON);
     if (icon) {
       icon.classList.replace(classes.CARET_DOWN, classes.CARET_RIGHT);
@@ -108,6 +110,7 @@ function createNodeElement(node) {
     el.innerHTML = expandedTemplate({
       key: node.key,
       size: getSizeString(node),
+      isExpanded: node.isExpanded,
     });
     const caretEl = el.querySelector("." + classes.CARET_ICON);
     node.dispose = listen(caretEl, "click", () => toggleNode(node));
@@ -122,7 +125,11 @@ function createNodeElement(node) {
   const lineEl = el.children[0];
 
   if (node.parent !== null) {
-    lineEl.classList.add(classes.HIDDEN);
+    if (node.isExpanded) {
+      lineEl.classList.remove(classes.HIDDEN);
+    } else {
+      lineEl.classList.add(classes.HIDDEN);
+    }
   }
 
   lineEl.style = "margin-left: " + node.depth * 18 + "px;";
@@ -224,6 +231,7 @@ export function renderJSON(jsonData, targetElement) {
   const parsedData = getJsonObject(jsonData);
   const tree = create(parsedData);
   render(tree, targetElement);
+
   return tree;
 }
 
@@ -245,7 +253,7 @@ export function render(tree, targetElement) {
 
 export function expand(node) {
   traverse(node, function (child) {
-    child.el.classList.remove(classes.HIDDEN);
+    child.el && child.el.classList.remove(classes.HIDDEN);
     child.isExpanded = true;
     setCaretIconDown(child);
   });
@@ -254,7 +262,9 @@ export function expand(node) {
 export function collapse(node) {
   traverse(node, function (child) {
     child.isExpanded = false;
-    if (child.depth > node.depth) child.el.classList.add(classes.HIDDEN);
+    if (child.depth > node.depth) {
+      child.el && child.el.classList.add(classes.HIDDEN);
+    }
     setCaretIconRight(child);
   });
 }
