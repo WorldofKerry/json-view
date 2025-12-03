@@ -16,7 +16,10 @@
     "city": "Brooklyn",
     "street": "718 Marcus Garvey Ave"
   },
-  "emptyObject": {},
-  "prop-with-null": null,
-  "prop-empty-string": ""
+  "empty_object": {},
+  "prop_with_null": null,
+  "prop_empty_string": "",
+  "prop_empty_array": [],
+  "prop_boolean": true,
+  "array": [1, "two", "", {}]
 }
