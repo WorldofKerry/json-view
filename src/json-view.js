@@ -31,7 +31,7 @@ function notExpandedTemplate(params = {}) {
       <div class="empty-icon"></div>
       <div class="json-key">${key}</div>
       <div class="json-separator">:</div>
-      <div class="json-value json-${type}">${value}</div>
+      <div class="json-value ${type}">${value}</div>
     </div>
   `;
 }
@@ -106,6 +106,41 @@ function createNodeElement(node) {
     return null;
   };
 
+  const getValueString = (node) => {
+    switch (node.type) {
+      case "string":
+        return node.value ? `${node.value}` : '""';
+
+      case "number":
+      case "boolean":
+      case "null":
+        return `${node.value}`;
+
+      case "array":
+        return `[${node.children.length}]`;
+
+      case "object":
+        return `{${node.children.length}}`;
+
+      default:
+        return `${node.value}`;
+    }
+  };
+
+  const getTypeString = (node) => {
+    switch (node.type) {
+      case "string":
+      case "number":
+      case "boolean":
+      case "null":
+      case "array":
+      case "object":
+        return `json-${node.type}`;
+      default:
+        return `json-${typeof node.value}`;
+    }
+  };
+
   if (node.children.length > 0) {
     el.innerHTML = expandedTemplate({
       key: node.key,
@@ -117,8 +152,8 @@ function createNodeElement(node) {
   } else {
     el.innerHTML = notExpandedTemplate({
       key: node.key,
-      value: node.value === "" ? '""' : node.value,
-      type: node.value === "{}" ? "object" : typeof node.value,
+      value: getValueString(node),
+      type: getTypeString(node),
     });
   }
 

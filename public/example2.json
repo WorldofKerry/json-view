@@ -18,5 +18,7 @@
   },
   "emptyObject": {},
   "prop-with-null": null,
-  "prop-empty-string": ""
+  "prop-empty-string": "",
+  "prop-empty-array": [],
+  "prop-boolean": true
 }
