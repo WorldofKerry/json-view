@@ -176,12 +176,15 @@ function createNodeElement(node) {
  * Recursively traverse Tree object
  * @param {Object} node
  * @param {Callback} callback
+ * @param {number} maxDepth - Maximum depth to traverse (relative to starting node)
+ * @param {number} currentDepth - Current depth in traversal (internal use)
  */
-export function traverse(node, callback) {
+export function traverse(node, callback, maxDepth = Infinity, currentDepth = 0) {
   callback(node);
-  if (node.children.length > 0) {
+  
+  if (currentDepth < maxDepth && node.children.length > 0) {
     node.children.forEach((child) => {
-      traverse(child, callback);
+      traverse(child, callback, maxDepth, currentDepth + 1);
     });
   }
 }
@@ -286,22 +289,22 @@ export function render(tree, targetElement) {
   targetElement.appendChild(containerEl);
 }
 
-export function expand(node) {
+export function expand(node, maxDepth = Infinity) {
   traverse(node, function (child) {
     child.el && child.el.classList.remove(classes.HIDDEN);
     child.isExpanded = true;
     setCaretIconDown(child);
-  });
+  }, maxDepth);
 }
 
-export function collapse(node) {
+export function collapse(node, maxDepth = Infinity) {
   traverse(node, function (child) {
     child.isExpanded = false;
     if (child.depth > node.depth) {
       child.el && child.el.classList.add(classes.HIDDEN);
     }
     setCaretIconRight(child);
-  });
+  }, maxDepth);
 }
 
 export function destroy(tree) {
