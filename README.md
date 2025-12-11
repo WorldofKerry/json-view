@@ -15,6 +15,7 @@ Import the jsonview library from the npm package:
 
 ```javascript
 import jsonview from "@pgrabovets/json-view";
+import "@pgrabovets/json-view/style.css";
 ```
 
 Or include jsonview.umd.cjs and jsonview.css from the dist directory in your HTML page:
