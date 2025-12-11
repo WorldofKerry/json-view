@@ -1,13 +1,13 @@
-function a(e) {
+function u(e) {
   return Array.isArray(e) ? "array" : e === null ? "null" : typeof e;
 }
 function f(e) {
   return document.createElement(e);
 }
-function I(e, t, n) {
-  return e.addEventListener(t, n), () => e.removeEventListener(t, n);
+function T(e, n, t) {
+  return e.addEventListener(n, t), () => e.removeEventListener(n, t);
 }
-function T(e) {
+function D(e) {
   e.parentNode.removeChild(e);
 }
 const i = {
@@ -18,59 +18,59 @@ const i = {
   ICON: "fas",
   CONTAINER: "json-container"
 };
-function m(e = {}) {
-  const { key: t, size: n, isExpanded: s = !1 } = e;
+function j(e = {}) {
+  const { key: n, size: t, isExpanded: s = !1 } = e;
   return `
     <div class="line">
       <div class="caret-icon"><i class="fas ${s ? i.CARET_DOWN : i.CARET_RIGHT}"></i></div>
-      <div class="json-key">${t}</div>
-      <div class="json-size">${n}</div>
+      <div class="json-key">${n}</div>
+      <div class="json-size">${t}</div>
     </div>
   `;
 }
-function x(e = {}) {
-  const { key: t, value: n, type: s } = e;
+function m(e = {}) {
+  const { key: n, value: t, type: s } = e;
   return `
     <div class="line">
       <div class="empty-icon"></div>
-      <div class="json-key">${t}</div>
+      <div class="json-key">${n}</div>
       <div class="json-separator">:</div>
-      <div class="json-value ${s}">${n}</div>
+      <div class="json-value ${s}">${t}</div>
     </div>
   `;
 }
-function j() {
+function x() {
   const e = f("div");
   return e.className = i.CONTAINER, e;
 }
 function p(e) {
-  e.children.forEach((t) => {
-    t.el && t.el.classList.add(i.HIDDEN), t.isExpanded && p(t);
+  e.children.forEach((n) => {
+    n.el && n.el.classList.add(i.HIDDEN), n.isExpanded && p(n);
   });
 }
 function d(e) {
-  e.children.forEach((t) => {
-    t.el && t.el.classList.remove(i.HIDDEN), t.isExpanded && d(t);
+  e.children.forEach((n) => {
+    n.el && n.el.classList.remove(i.HIDDEN), n.isExpanded && d(n);
   });
 }
 function y(e) {
   if (e.children.length > 0 && e.el) {
-    const t = e.el.querySelector("." + i.ICON);
-    t && t.classList.replace(i.CARET_RIGHT, i.CARET_DOWN);
+    const n = e.el.querySelector("." + i.ICON);
+    n && n.classList.replace(i.CARET_RIGHT, i.CARET_DOWN);
   }
 }
 function E(e) {
   if (e.children.length > 0 && e.el) {
-    const t = e.el.querySelector("." + i.ICON);
-    t && t.classList.replace(i.CARET_DOWN, i.CARET_RIGHT);
+    const n = e.el.querySelector("." + i.ICON);
+    n && n.classList.replace(i.CARET_DOWN, i.CARET_RIGHT);
   }
 }
 function v(e) {
   e.isExpanded ? (e.isExpanded = !1, E(e), p(e)) : (e.isExpanded = !0, y(e), d(e));
 }
 function O(e) {
-  let t = f("div");
-  const n = (r) => {
+  let n = f("div");
+  const t = (r) => {
     const o = r.children.length;
     return r.type === "array" ? `[${o}]` : r.type === "object" ? `{${o}}` : null;
   }, s = (r) => {
@@ -88,7 +88,7 @@ function O(e) {
       default:
         return `${r.value}`;
     }
-  }, u = (r) => {
+  }, c = (r) => {
     switch (r.type) {
       case "string":
       case "number":
@@ -102,34 +102,34 @@ function O(e) {
     }
   };
   if (e.children.length > 0) {
-    t.innerHTML = m({
+    n.innerHTML = j({
       key: e.key,
-      size: n(e),
+      size: t(e),
       isExpanded: e.isExpanded
     });
-    const r = t.querySelector("." + i.CARET_ICON);
-    e.dispose = I(r, "click", () => v(e));
+    const r = n.querySelector("." + i.CARET_ICON);
+    e.dispose = T(r, "click", () => v(e));
   } else
-    t.innerHTML = x({
+    n.innerHTML = m({
       key: e.key,
       value: s(e),
-      type: u(e)
+      type: c(e)
     });
-  const c = t.children[0];
-  return e.parent !== null && (e.isExpanded ? c.classList.remove(i.HIDDEN) : c.classList.add(i.HIDDEN)), c.style = "margin-left: " + e.depth * 18 + "px;", c;
+  const a = n.children[0];
+  return e.parent !== null && (e.isExpanded ? a.classList.remove(i.HIDDEN) : a.classList.add(i.HIDDEN)), a.style = "margin-left: " + e.depth * 18 + "px;", a;
 }
-function l(e, t) {
-  t(e), e.children.length > 0 && e.children.forEach((n) => {
-    l(n, t);
+function l(e, n, t = 1 / 0, s = 0) {
+  n(e), s < t && e.children.length > 0 && e.children.forEach((c) => {
+    l(c, n, t, s + 1);
   });
 }
 function h(e = {}) {
-  const t = (s) => a(s) === "object" && Object.keys(s).length === 0;
-  let n = e.hasOwnProperty("value") ? e.value : null;
-  return t(n) && (n = "{}"), {
+  const n = (s) => u(s) === "object" && Object.keys(s).length === 0;
+  let t = e.hasOwnProperty("value") ? e.value : null;
+  return n(t) && (t = "{}"), {
     key: e.key || null,
     parent: e.parent || null,
-    value: n,
+    value: t,
     isExpanded: e.isExpanded || !1,
     type: e.type || null,
     children: e.children || [],
@@ -138,59 +138,59 @@ function h(e = {}) {
     dispose: null
   };
 }
-function N(e, t) {
+function N(e, n) {
   if (typeof e == "object")
-    for (let n in e) {
+    for (let t in e) {
       const s = h({
-        value: e[n],
-        key: n,
-        depth: t.depth + 1,
-        type: a(e[n]),
-        parent: t
+        value: e[t],
+        key: t,
+        depth: n.depth + 1,
+        type: u(e[t]),
+        parent: n
       });
-      t.children.push(s), N(e[n], s);
+      n.children.push(s), N(e[t], s);
     }
 }
 function C(e) {
   return typeof e == "string" ? JSON.parse(e) : e;
 }
-function g(e) {
-  const t = C(e), n = h({
-    value: t,
-    key: a(t),
-    type: a(t)
+function I(e) {
+  const n = C(e), t = h({
+    value: n,
+    key: u(n),
+    type: u(n)
   });
-  return N(t, n), n;
+  return N(n, t), t;
 }
-function R(e, t) {
-  const n = C(e), s = g(n);
-  return D(s, t), s;
+function R(e, n) {
+  const t = C(e), s = I(t);
+  return g(s, n), s;
 }
-function D(e, t) {
-  const n = j();
+function g(e, n) {
+  const t = x();
   l(e, function(s) {
-    s.el = O(s), n.appendChild(s.el);
-  }), t.appendChild(n);
+    s.el = O(s), t.appendChild(s.el);
+  }), n.appendChild(t);
 }
-function $(e) {
+function $(e, n = 1 / 0) {
   l(e, function(t) {
     t.el && t.el.classList.remove(i.HIDDEN), t.isExpanded = !0, y(t);
-  });
+  }, n);
 }
-function k(e) {
+function k(e, n = 1 / 0) {
   l(e, function(t) {
     t.isExpanded = !1, t.depth > e.depth && t.el && t.el.classList.add(i.HIDDEN), E(t);
-  });
+  }, n);
 }
 function A(e) {
-  l(e, (t) => {
-    t.dispose && t.dispose();
-  }), T(e.el.parentNode);
+  l(e, (n) => {
+    n.dispose && n.dispose();
+  }), D(e.el.parentNode);
 }
 const H = {
   toggleNode: v,
-  render: D,
-  create: g,
+  render: g,
+  create: I,
   renderJSON: R,
   expand: $,
   collapse: k,
@@ -199,11 +199,11 @@ const H = {
 };
 export {
   k as collapse,
-  g as create,
+  I as create,
   H as default,
   A as destroy,
   $ as expand,
-  D as render,
+  g as render,
   R as renderJSON,
   v as toggleNode,
   l as traverse
