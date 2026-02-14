@@ -1,7 +1,7 @@
 import "./style.css";
 
+import { detach, element, listen } from "./utils/dom";
 import getDataType from "./utils/getDataType";
-import { listen, detach, element } from "./utils/dom";
 
 const classes = {
   HIDDEN: "hidden",
@@ -175,18 +175,14 @@ function createNodeElement(node) {
 /**
  * Recursively traverse Tree object
  * @param {Object} node
- * @param {Callback} callback
- * @param {number} maxDepth - Maximum depth to traverse (relative to starting node)
+ * @param {Callback} callback - Receives node and current depth as arguments
  * @param {number} currentDepth - Current depth in traversal (internal use)
  */
-export function traverse(node, callback, maxDepth = Infinity, currentDepth = 0) {
-  callback(node);
-  
-  if (currentDepth < maxDepth && node.children.length > 0) {
-    node.children.forEach((child) => {
-      traverse(child, callback, maxDepth, currentDepth + 1);
-    });
-  }
+export function traverse(node, callback, depth = 0) {
+  callback(node, depth);
+  node.children.forEach((child) => {
+    traverse(child, callback, depth + 1);
+  });
 }
 
 /**
@@ -290,21 +286,25 @@ export function render(tree, targetElement) {
 }
 
 export function expand(node, maxDepth = Infinity) {
-  traverse(node, function (child) {
-    child.el && child.el.classList.remove(classes.HIDDEN);
-    child.isExpanded = true;
-    setCaretIconDown(child);
-  }, maxDepth);
+  traverse(node, function (child, depth) {
+    if (depth < maxDepth) {
+      child.isExpanded = true;
+      setCaretIconDown(child);
+    }
+    if (depth <= maxDepth) {
+      child.el && child.el.classList.remove(classes.HIDDEN);
+    }
+  });
 }
 
-export function collapse(node, maxDepth = Infinity) {
+export function collapse(node) {
   traverse(node, function (child) {
     child.isExpanded = false;
     if (child.depth > node.depth) {
       child.el && child.el.classList.add(classes.HIDDEN);
     }
     setCaretIconRight(child);
-  }, maxDepth);
+  });
 }
 
 export function destroy(tree) {
